@@ -1,0 +1,775 @@
+erDiagram
+    %% Core Client and User Management
+    Client {
+        int id PK
+        string subscriptionPlan     
+        datetime subscriptionEndDate
+        boolean isTrial
+        boolean isActive
+        int maxUsersAllowed
+        int maxJobPostsAllowed
+        json usageStats            
+        string billingCycle        
+        string paymentStatus       
+        string paymentMethod      
+        datetime lastPaymentDate
+        datetime nextBillingDate
+        json preferences          
+        datetime createdAt
+        datetime updatedAt
+    }
+
+    User {
+        int id PK
+        int clientId FK
+        string fullName
+        string email
+        string password
+        string phone
+        string role
+        datetime createdAt
+        boolean isActive
+        datetime passwordLastChanged
+    }
+    
+    Permission {
+        int id PK
+        string name
+    }
+    
+    UserPermission {
+        int id PK
+        int userId FK
+        int permissionId FK
+        datetime grantedAt
+        string grantedBy
+    }
+
+    UserNotificationSettings {
+        int id PK
+        int userId FK
+        string frequency
+        time quietHoursStart
+        time quietHoursEnd
+        boolean quietHoursEnabled
+        datetime lastUpdated
+    }
+    
+    NotificationChannel {
+        int id PK
+        string name
+        string description
+        boolean isActive
+    }
+    
+    UserNotificationChannel {
+        int id PK
+        int userNotificationSettingsId FK
+        int notificationChannelId FK
+        boolean isEnabled
+    }
+    
+    NotificationType {
+        int id PK
+        string name
+        string description
+        string category
+        boolean isActive
+    }
+    
+    UserNotificationType {
+        int id PK
+        int userNotificationSettingsId FK
+        int notificationTypeId FK
+        boolean isEnabled
+    }
+    
+    
+    UserActivity {
+        int id PK
+        int userId FK
+        string action
+        string entityType
+        int entityId
+        datetime timestamp
+        string ipAddress
+        string userAgent
+        json details
+        string status
+    }
+    
+    %% Team and Recruiter Structure
+    Recruiter {
+        int id PK
+        int userId FK
+        string department
+        string specialization
+        string status
+        int activeJobs
+        int candidates
+        int hires
+        float hireRate
+        float averageTimeToHire
+        float CandidateSatisfactionRate
+    }
+    
+    Team {
+        int id PK
+        string name
+        string department
+        string status
+        string location
+        string size
+        int leadId FK
+        string description
+        int activeJobs
+        int openRequisitions
+        int hires
+        json goals
+        float timeToHire
+        float offerAcceptanceRate
+        json monthlyHires
+        json recentActivity
+    }
+    
+    TeamMember {
+        int id PK
+        int teamId FK
+        int recruiterId FK
+        string role
+        datetime joinDate
+        int hires
+        float timeToHire
+        float offerAcceptanceRate
+    }
+    
+    TeamMemberSkill {
+        int id PK
+        int teamMemberId FK
+        string skill
+        int proficiencyLevel
+    }
+    
+    %% Company Management
+    Company {
+        string id PK
+        string name
+        string industry
+        string size
+        string location
+        string website
+        string status
+        string GSTIN
+        string PAN
+        string taxID
+        string registrationNumber
+        string addressLine1
+        string addressLine2
+        string city
+        string stateProvince
+        string postalCode
+        string country
+        string description
+        string linkedIn
+        string twitter
+        string facebook
+        string instagram
+        int yearFounded
+        string companyType
+        string stockSymbol
+        string parentCompany
+        string revenue
+        int employeeCount
+        string companyPhone
+        string companyEmail
+        int jobs
+        int candidates
+        int openJobs
+        datetime createdAt
+        datetime updatedAt
+    }
+    
+    CompanyContact {
+        int id PK
+        string companyId FK
+        string contactName
+        string contactPosition
+        string contactPhone
+        string contactEmail
+        boolean isPrimary
+    }
+    
+    %% Job Management
+    Job {
+        int id PK
+        string jobTitle
+        string jobType
+        string companyId FK
+        string department
+        string location
+        int openings
+        int salaryMin
+        int salaryMax
+        string experienceLevel
+        string description
+        string requirements
+        string responsibilities
+        string benefits
+        string jobStatus
+        int applicants
+        string postedDate
+        string deadline
+        string workType
+        json applicationStages
+        int applications
+        float conversionRate
+    }
+    
+    JobTemplate {
+        int id PK
+        string name
+        string title
+        string department
+        string location
+        string jobType
+        int openings
+        float salaryMin
+        float salaryMax
+        string requiredSkills
+        string experienceLevel
+        string jobDescription
+        boolean isUserCreated
+    }
+    
+    JobSkillRequirement {
+        int id PK
+        int jobId FK
+        int skillId FK
+        boolean isRequired
+        int minimumProficiency
+    }
+    
+    %% Candidate Management
+    Candidate {
+        int id PK
+        string name
+        string email
+        string position
+        string positionType
+        string status
+        string phone
+        string location
+        string bio
+        string resumeUrl
+        datetime dateAdded
+        string source
+        string linkedInProfile
+        string githubProfile
+        string twitterProfile
+        string portfolioUrl
+        string currentCompany
+        string noticePeriod
+        float expectedSalary
+    }
+    
+    CandidateEducation {
+        int id PK
+        int candidateId FK
+        string degree
+        string institution
+        string fieldOfStudy
+        string startDate
+        string endDate
+        string documentUrl
+    }
+    
+    CandidateExperience {
+        int id PK
+        int candidateId FK
+        string title
+        string company
+        string location
+        string startDate
+        string endDate
+        string description
+        string experienceUrl
+        string experienceLevel
+        int yearsOfExperience
+        boolean isCurrentRole
+    }
+
+    CandidateExtraCurricular {
+        int id PK
+        int candidateId FK
+        string title
+        string organization
+        string description
+        string certificateUrl
+    }
+
+    CandidateSkills {
+        int id PK
+        string title
+    }
+    
+    CandidateSkillMap {
+        int id PK
+        int candidateId FK
+        int skillId FK
+        int proficiencyLevel
+    }
+    
+    CandidateCertification {
+        int id PK
+        int candidateId FK
+        string certificationName
+        string issuingOrganization
+        date issueDate
+        date expiryDate
+        string certificateUrl
+    }
+    
+    CandidateJobMap {
+        int id PK
+        int candidateId FK
+        int jobId FK
+        datetime assignedDate
+        string assignedBy
+    }
+    
+    %% Application Process
+    Application {
+        int id PK
+        int candidateId FK
+        int jobId FK
+        string status
+        datetime appliedDate
+        string source
+        string notes
+        int currentStage
+        json stageHistory
+        json scores
+        boolean isShortlisted
+        string rejectionReason
+        datetime lastUpdated
+    }
+    
+    ApplicationAttachment {
+        int id PK
+        int applicationId FK
+        string attachmentUrl
+        string attachmentType
+        datetime uploadedAt
+    }
+    
+    ApplicationTag {
+        int id PK
+        int applicationId FK
+        string tag
+    }
+    
+    Interview {
+        int id PK
+        int candidateId FK
+        int applicationId FK
+        string position
+        string date
+        string time
+        string duration
+        string interviewType
+        string interviewStatus
+        string interviewer
+        string notes
+        int createdAt
+        string location
+        string meetingLink
+    }
+    
+    InterviewFeedback {
+        int id PK
+        int interviewId FK
+        int recruiterId FK
+        int rating
+        string strengths
+        string weaknesses
+        string notes
+        boolean recommendHire
+        datetime submittedAt
+        json skillAssessments
+        json cultureFit
+        int overallScore
+    }
+    
+    %% Document Management
+    Document {
+        string id PK
+        string documentUrl
+        string name
+        string description
+        string uploadedDate
+        string uploadedBy
+        string category
+        boolean isTemplate
+        boolean isShared
+        json permissions
+    }
+    
+    DocumentTag {
+        int id PK
+        string documentId FK
+        string tag
+    }
+    
+    DocumentShare {
+        int id PK
+        string documentId FK
+        int userId FK
+        string permission
+        datetime sharedAt
+    }
+    
+    CompanyDocument {
+        int id PK
+        string companyId FK
+        string documentId FK
+        datetime addedDate
+        string addedBy
+        string category
+        string notes
+    }
+    
+    CandidateDocument {
+        int id PK
+        int candidateId FK
+        string documentId FK
+        datetime addedDate
+        string documentType
+        boolean isConfidential
+        string notes
+    }
+    
+    JobDocument {
+        int id PK
+        int jobId FK
+        string documentId FK
+        datetime addedDate
+        string category
+    }
+    
+    %% Notes Management
+    Note {
+        int id PK
+        string companyId FK
+        string date
+        string author
+        string content
+        string category
+        boolean isPinned
+        boolean isPrivate
+    }
+    
+    NoteTag {
+        int id PK
+        int noteId FK
+        string tag
+    }
+    
+    CandidateNote {
+        int id PK
+        int candidateId FK
+        string date
+        string author
+        string content
+        string category
+        boolean isPinned
+        boolean isPrivate
+        int interviewId
+    }
+    
+    CandidateNoteTag {
+        int id PK
+        int candidateNoteId FK
+        string tag
+    }
+    
+    %% Communication
+    Message {
+        int id PK
+        int senderId FK
+        int recipientId FK
+        string subject
+        string content
+        datetime sentDate
+        boolean isRead
+        boolean isStarred
+        boolean isArchived
+    }
+    
+    MessageAttachment {
+        int id PK
+        int messageId FK
+        string attachmentUrl
+        string attachmentType
+        string attachmentName
+        int fileSize
+    }
+    
+    EmailTemplate {
+        int id PK
+        string name
+        string description
+        string subject
+        string content
+        string category
+        datetime lastUpdated
+        string createdBy
+        datetime createdAt
+    }
+    
+    EmailTemplateTag {
+        int id PK
+        int emailTemplateId FK
+        string tag
+    }
+    
+    %% Onboarding
+    NewHire {
+        int id PK
+        int candidateId FK
+        int jobId FK
+        string firstName
+        string lastName
+        string email
+        string position
+        string department
+        string startDate
+        string status
+        int progress
+        int managerId
+        string workLocation
+    }
+    
+    OnboardingTask {
+        int id PK
+        int newHireId FK
+        string title
+        string description
+        string assignedTo
+        string dueDate
+        string status
+        int priority
+        string category
+        datetime completedDate
+        string completedBy
+    }
+    
+    OnboardingTemplate {
+        int id PK
+        string name
+        string description
+        string department
+        int itemCount
+        datetime lastUpdated
+        string createdBy
+        datetime createdAt
+    }
+    
+    OnboardingTaskTemplate {
+        int id PK
+        string title
+        string description
+    }
+    
+    TemplateTaskMap {
+        int id PK
+        int templateId FK
+        int taskTemplateId FK
+        int sequence
+    }
+    
+    %% Job Assignments
+    TeamJob {
+        int id PK
+        int teamId FK
+        int jobId FK
+        datetime assignedDate
+        string assignedBy
+        int targetHires
+        datetime targetDate
+    }
+    
+    RecruiterJob {
+        int id PK
+        int recruiterId FK
+        int jobId FK
+        datetime assignedDate
+        string assignedBy
+        int targetCandidates
+        int candidatesReviewed
+        int interviewsScheduled
+    }
+    
+    %% Analytics and Reporting
+    RecruitmentFunnel {
+        int id PK
+        datetime period
+        int applicants
+        int screened
+        int interviewed
+        int offered
+        int accepted
+        int rejected
+        json byDepartment
+        json byJob
+        json bySource
+        json conversionRates
+    }
+    
+    HiringMetrics {
+        int id PK
+        datetime period
+        int timeToHire
+        float costPerHire
+        float offerAcceptanceRate
+        json byRecruiter
+        json byTeam
+        json byDepartment
+        json byPosition
+        json trends
+    }
+    
+    BusinessMetrics {
+        int id PK
+        string metricName
+        float currentValue
+        float previousValue
+        float changePercentage
+        string trend
+        string period
+        datetime updatedAt
+        json historicalData
+    }
+    
+    Report {
+        int id PK
+        string name
+        string type
+        string dateRange
+        string format
+        json content
+        boolean charts
+        boolean tables
+        datetime createdAt
+        int createdBy
+    }
+    
+    ScheduledReport {
+        int id PK
+        string name
+        string schedule
+        string day
+        string time
+        string format
+        string reportType
+        boolean active
+        datetime lastRun
+        json recipients
+        json parameters
+    }
+    
+    %% Relationships
+    
+    %% Client Relationships
+    Client ||--o{ User : has
+    
+    %% User Relationships
+    User ||--o{ Recruiter : can_be
+    User ||--o{ UserActivity : generates
+    User ||--o{ Message : sends
+    User ||--o{ Message : receives
+    User ||--o{ DocumentShare : has_access_to
+    User ||--o{ UserPermission : has
+    Permission ||--o{ UserPermission : assigned_to
+    User ||--o| UserNotificationSettings : has
+    UserNotificationSettings ||--o{ UserNotificationChannel : has
+    UserNotificationSettings ||--o{ UserNotificationType : has
+    NotificationChannel ||--o{ UserNotificationChannel : references
+    NotificationType ||--o{ UserNotificationType : references
+    
+    %% Team Relationships
+    Recruiter }o--|| Team : leads
+    Team ||--o{ TeamMember : has
+    Team ||--o{ Team : has_subteam
+    TeamMember }o--|| Recruiter : is
+    TeamMember ||--o{ TeamMemberSkill : has
+    
+    %% Job Assignment Relationships
+    Team ||--o{ TeamJob : assigned
+    TeamJob }o--|| Job : contains
+    Recruiter ||--o{ RecruiterJob : manages
+    RecruiterJob }o--|| Job : assigned_to
+    Recruiter ||--o{ InterviewFeedback : provides
+    
+    %% Company Relationships
+    Company ||--o{ Job : posts
+    Company ||--o{ Note : has
+    Company ||--o{ CompanyDocument : has
+    Company ||--o{ CompanyContact : has
+    CompanyDocument }o--|| Document : is
+    
+    %% Job Relationships
+    Job ||--o{ Application : receives
+    Job }o--|| JobTemplate : based_on
+    Job ||--o{ JobDocument : has
+    Job ||--o{ JobSkillRequirement : requires
+    JobDocument }o--|| Document : is
+    JobSkillRequirement }o--|| CandidateSkills : references
+    
+    %% Candidate Relationships
+    Application }o--|| Candidate : submits
+    Application ||--o{ ApplicationAttachment : has
+    Application ||--o{ ApplicationTag : has
+    
+    Candidate ||--o{ CandidateEducation : has
+    Candidate ||--o{ CandidateExperience : has
+    Candidate ||--o{ CandidateExtraCurricular : has
+    Candidate ||--o{ CandidateSkillMap : has
+    CandidateSkillMap }o--|| CandidateSkills : references
+    Candidate ||--o{ CandidateCertification : has
+    Candidate ||--o{ Interview : participates_in
+    Candidate ||--o{ CandidateDocument : has
+    Candidate ||--o{ CandidateNote : has
+    CandidateDocument }o--|| Document : is
+    Candidate ||--o{ NewHire : becomes
+    Candidate ||--o{ CandidateJobMap : assigned_to
+    CandidateJobMap }o--|| Job : references
+    
+    %% Interview Relationships
+    Interview ||--o{ InterviewFeedback : receives
+    Interview }o--|| Application : scheduled_for
+    
+    %% Document Relationships
+    Document ||--o{ DocumentShare : shared_through
+    Document ||--o{ DocumentTag : has
+    
+    %% Notes Relationships
+    Note ||--o{ NoteTag : has
+    CandidateNote ||--o{ CandidateNoteTag : has
+    
+    %% Onboarding Relationships
+    NewHire ||--o{ OnboardingTask : assigned
+    OnboardingTemplate ||--o{ TemplateTaskMap : contains
+    TemplateTaskMap }o--|| OnboardingTaskTemplate : references
+    OnboardingTaskTemplate ||--o{ OnboardingTask : creates
+    
+    %% Communication Relationships
+    Message ||--o{ MessageAttachment : has
+    EmailTemplate ||--o{ EmailTemplateTag : has
+    EmailTemplate ||--o{ Message : used_in
+    
+    %% Analytics Relationships
+    Report ||--o{ ScheduledReport : scheduled_as
+    RecruitmentFunnel ||--o{ Job : analyzes
+    HiringMetrics ||--o{ Recruiter : measures
+    HiringMetrics ||--o{ Team : evaluates
+    BusinessMetrics ||--o{ Report : included_in
